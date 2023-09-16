@@ -60,13 +60,15 @@ function verifyToken(req, res, next) {
 
 // Routes
 
-// Admin signup route
-app.post("/api/admin/signup", async (req, res) => {
-  const { username, password, email, role } = req.query;
+// signup route
+app.post("/api/signup", async (req, res) => {
+  let { username, password, email, role } = req.body;
+  username = username.trim().toLowerCase();
 
   try {
     const check = "SELECT * FROM users WHERE username = $1";
     const result = await client.query(check, [username]);
+    console.log(result)
 
     if (result.rowCount > 0) {
       return res.status(200).send({
@@ -89,10 +91,10 @@ app.post("/api/admin/signup", async (req, res) => {
   }
 });
 
-// Admin login route
-app.post("/api/admin/login", async (req, res) => {
-  const { username, password } = req.query;
-
+// login route
+app.post("/api/login", async (req, res) => {
+  let { username, password } = req.body;
+  username = username = username.trim().toLowerCase();
   try {
     const userQuery = 'SELECT id, username, password, role FROM users WHERE username = $1';
     const { rows } = await client.query(userQuery, [username]);
